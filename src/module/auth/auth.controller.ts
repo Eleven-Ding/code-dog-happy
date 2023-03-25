@@ -5,29 +5,16 @@ import {
   MiddleWare,
   Controller,
 } from "../../decorator/automatic-routing";
-
-// 中间件
-function middleWare1(req: any, res: any, next: any) {
-  req.shiyi = "Hello Shiyi";
-  next();
-}
-function middleWare2(req: any, res: any, next: any) {
-  req.shier = "Shier";
-  next();
-}
+import { Response, Request } from "express";
 
 @Controller("/auth")
 class AuthContoller {
   @Get("/getname")
-  @MiddleWare(middleWare2)
-  @MiddleWare(middleWare1)
-  async handleGetName(req: any, res: any) {
+  async handleGetName(req: Request, res: Response) {
     const data = await authService.login();
     return res.send({
       name: "Hello AuthContoller",
       data: "authService 处理数据" + data,
-      shiyi: req.shiyi,
-      shier: req.shier,
     });
   }
   @Get("/update")
