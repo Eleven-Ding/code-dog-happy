@@ -1,9 +1,13 @@
 import { Sequelize } from "sequelize";
+import globalEnvConfig from "../config";
 
-const sequelize = new Sequelize("", "", "!", {
-  host: "",
-  dialect: "mysql",
-  port: 11,
+const {
+  database: { port, password, user, base, host, dialect },
+} = globalEnvConfig;
+const sequelize = new Sequelize(base, user, password, {
+  host,
+  dialect,
+  port,
 });
 
 export default sequelize;
