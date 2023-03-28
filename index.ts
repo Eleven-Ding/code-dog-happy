@@ -2,12 +2,10 @@ import express from "express";
 import { parseRoutes } from "./src/decorator/automatic-routing";
 import "./src/decorator/automatic-routing";
 import { PORT } from "./src/config/constants";
-import { connectDataBase } from "./src/common/database";
+import "./src/common/database";
 
 const app = express();
 
-// 初始化数据库
-connectDataBase();
 
 app.get("/", (req, res, next) => {
   res.send("Hello world111");
