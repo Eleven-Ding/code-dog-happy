@@ -1,12 +1,14 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../common/database";
+import { PostModel } from "../posts/posts.model";
 
-const User = sequelize.define(
+export const UserModel = sequelize.define(
   "User",
   {
     user_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      allowNull: false,
     },
     avatar_url: {
       type: DataTypes.STRING,
@@ -22,6 +24,11 @@ const User = sequelize.define(
     },
   },
   {
-    tableName: "User",
+    freezeTableName: true,
   }
 );
+
+UserModel.hasMany(PostModel, {
+  foreignKey: "post_id",
+  sourceKey: "user_id",
+});
