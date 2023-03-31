@@ -19,11 +19,6 @@ export class UserController {
       data,
     });
   }
-  // Github 登录
-  @Get("/login")
-  async LogInWitGithub() {
-    
-  }
 }
 
 export default new UserController();

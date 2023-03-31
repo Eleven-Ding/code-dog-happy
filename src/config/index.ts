@@ -3,10 +3,11 @@ import fs from "fs";
 import path from "path";
 import { Env, GlobalEnvConfig } from "../types/config";
 
+const ext = process.env.NODE_ENV === "development" ? "ts" : "js";
 let globalEnvConfig: GlobalEnvConfig = {} as GlobalEnvConfig;
 switch (process.env.NODE_ENV) {
   case Env.development:
-    const filePath = path.resolve(__dirname, "./config.dev.ts");
+    const filePath = path.resolve(__dirname, `./config.dev.${ext}`);
     if (!fs.existsSync(filePath)) {
       console.log(chalk.yellow("[ Warn ] development config is not exsit"));
       break;
@@ -16,7 +17,7 @@ switch (process.env.NODE_ENV) {
   case Env.production:
     globalEnvConfig = require(path.resolve(
       __dirname,
-      "./config.prod.ts"
+      `./config.prod.${ext}`
     )).default;
 }
 

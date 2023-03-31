@@ -25,6 +25,13 @@ export const UserModel = sequelize.define(
   },
   {
     freezeTableName: true,
+    indexes: [
+      {
+        name: "username_index",
+        using: "BTREE",
+        fields: ["username"],
+      },
+    ],
   }
 );
 

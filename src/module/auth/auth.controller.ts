@@ -5,6 +5,7 @@ import { Response, Request } from "express";
 import { userService } from "../user/user.service";
 import { User } from "../../types/model";
 import { generateToken } from "../../utils/jwt";
+import { createResponse } from "../../utils/createResponse";
 
 @Controller("/auth")
 class AuthContoller {
@@ -12,11 +13,7 @@ class AuthContoller {
   async Login(req: Request, res: Response) {
     const { code } = url.parse(req.url, true).query;
     if (!code) {
-      return res.send({
-        message: "code is not exsit !",
-        data: null,
-        code: -1,
-      });
+      return res.send(createResponse(null, "code is not exsit !", -1));
     }
     try {
       // 1. 通过 GitHub 登录获取 UserInfo
@@ -39,13 +36,19 @@ class AuthContoller {
       // 4. 生成 Token
       const token = generateToken(userInfo);
 
-      await res.send({ token, userInfo });
+      await res.send(
+        createResponse({ token, userInfo }, "Login with github success")
+      );
     } catch (error) {
-      res.send({
-        error,
-        code: -1,
-        message: "login error, please login again",
-      });
+      res.send(
+        createResponse(
+          null,
+          `login error, please login again ErrorMsg = ${
+            (error as Error).message
+          }`,
+          -1
+        )
+      );
     }
   }
 }
