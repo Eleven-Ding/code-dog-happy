@@ -15,5 +15,10 @@ export function generateToken(userInfo: User) {
 
 export function verifyToken(token: string) {
   var decoded = jwt.verify(token, tokenSecret);
-  console.log(decoded);
+  const { iat, exp, ...userInfo } = decoded;
+  // Token 过期， TODO: 重新登录
+  if (Date.now() / 1000 > exp) {
+    throw new Error("token is expired");
+  }
+  return userInfo as User;
 }

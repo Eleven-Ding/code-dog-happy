@@ -1,22 +1,31 @@
 import { Controller, Get, Post } from "../../decorator/automatic-routing";
 import { Request, Response } from "express";
+import { Middleware } from "../../decorator/automatic-routing";
+import { verifyAuthMiddleware } from "../../authVerify.ts/verify.auth";
+import { AuthRequest } from "../../types/model";
 
-// 文章更新 需要对应的权限，这个可以在中间件做
-// 参数教研可以在中间件去做
 @Controller("/post")
 export class PostsController {
   @Get("/one")
   findOne(req: Request, res: Response) {
     res.send("Post");
   }
+  // 创建文章
   @Post("/create")
-  createPost() {}
+  @Middleware(verifyAuthMiddleware)
+  createPost(req: AuthRequest, res: Response) {
+    console.log(req.user);
+    return res.send({
+      user: req.user,
+    });
+  }
 
   @Post("/all")
   findAll() {}
 
   // 更新文章信息
   @Post("/update")
+  @Middleware(verifyAuthMiddleware)
   updaePost() {}
 }
 const postsController = new PostsController();

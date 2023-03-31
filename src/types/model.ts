@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export type User = {
   username: string;
   user_id: number;
@@ -17,3 +19,5 @@ export type GithubUserInfo = {
   // Gi thub 链接
   url: string;
 };
+
+export type AuthRequest = Request & { user: User };

@@ -54,7 +54,7 @@ export function Post(path: string = "") {
   };
 }
 // 中间件装饰器
-export function MiddleWare(middle: Function) {
+export function Middleware(middle: Function) {
   return function (
     target: any,
     propertyKey: string,
