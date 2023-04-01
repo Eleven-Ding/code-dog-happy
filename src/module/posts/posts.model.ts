@@ -1,6 +1,12 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../common/database";
 
+export enum Post_state {
+  Publish = 0,
+  Draft = 1,
+  Drop = 2,
+}
+
 export const PostModel = sequelize.define(
   "Post",
   {
@@ -37,13 +43,11 @@ export const PostModel = sequelize.define(
     // 存储 markdown 内容
     post_content: {
       type: DataTypes.TEXT,
-      defaultValue: "",
     },
     // 文章状态
-    // 1. 草稿 、2. 发布  3. 删除(隐藏)
     post_state: {
       type: DataTypes.INTEGER,
-      defaultValue: 0,
+      defaultValue: Post_state.Publish,
     },
   },
   {
@@ -51,11 +55,4 @@ export const PostModel = sequelize.define(
   }
 );
 
-// PostModel.sync({ force: true });
-
-// PostModel.create({
-//   post_url: "111",
-//   post_title: "title",
-//   user_id: 1,
-//   post_description: "描述",
-// });
+PostModel.sync();

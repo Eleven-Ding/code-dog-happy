@@ -24,7 +24,7 @@ export const UserModel = sequelize.define(
     },
   },
   {
-    freezeTableName: true,
+    tableName:"user",
     indexes: [
       {
         name: "username_index",
@@ -35,7 +35,5 @@ export const UserModel = sequelize.define(
   }
 );
 
-UserModel.hasMany(PostModel, {
-  foreignKey: "post_id",
-  sourceKey: "user_id",
-});
+
+UserModel.sync();

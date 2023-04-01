@@ -1,8 +1,8 @@
 // Token 校验中间件
 import { Response, NextFunction } from "express";
-import { createResponse } from "../utils/createResponse";
-import { AuthRequest } from "../types/model";
-import { verifyToken } from "../utils/jwt";
+import { createResponse } from "../../../utils/createResponse";
+import { AuthRequest } from "../../../types/model";
+import { verifyToken } from "../../../utils/jwt";
 
 export function verifyAuthMiddleware(
   req: AuthRequest,
