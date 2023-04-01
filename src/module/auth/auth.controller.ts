@@ -6,6 +6,7 @@ import { userService } from "../user/user.service";
 import { User } from "../../types/model";
 import { generateToken } from "../../utils/jwt";
 import { createResponse } from "../../utils/createResponse";
+import { AuthType } from "./auth.model";
 
 @Controller("/auth")
 class AuthContoller {
@@ -31,9 +32,11 @@ class AuthContoller {
       // 3. 如果 user 不存在 则需要将 User 进行插入，插入应该不用阻塞 Token 的生成
       if (!user) {
         await userService.createUser(userInfo);
+        // 4. 绑定权限
+        await authService.bindUserRole(userInfo.user_id, AuthType.User); // 默认是绑定 User
       }
 
-      // 4. 生成 Token
+      // 5. 生成 Token
       const token = generateToken(userInfo);
 
       await res.send(

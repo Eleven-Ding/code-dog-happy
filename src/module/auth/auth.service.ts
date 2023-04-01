@@ -3,6 +3,7 @@ import axios from "axios";
 import url from "url";
 import { GithubUserInfo, User } from "../../types/model";
 import { generateToken } from "../../utils/jwt";
+import { AuthModel, AuthType } from "./auth.model";
 
 const { github } = globalEnvConfig;
 const { client_id, client_secret, get_access_tolen_url, get_user_info_url } =
@@ -29,6 +30,15 @@ class AuthService {
         `Failed to get github userInfo errorMsg=${(error as Error).message}`
       );
     }
+  }
+
+  // 绑定用户权限
+  async bindUserRole(user_id: number, role: AuthType) {
+    // 先查找是否已经存在
+    return await AuthModel.create({
+      user_id,
+      auth_type: role,
+    });
   }
 }
 
