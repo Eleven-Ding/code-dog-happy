@@ -25,7 +25,7 @@ function commonDecoraor(
   path: string,
   method: ALLOW_METHODS
 ) {
-  const { middlewares = [] } = target;
+  const { middlewares = [] } = descriptor.value;
   parseLists.push({
     method,
     handle: descriptor.value,
@@ -60,10 +60,10 @@ export function Middleware(middle: Function) {
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
-    if (Array.isArray(target.middlewares)) {
-      target.middlewares.push(middle);
+    if (Array.isArray(descriptor.value.middlewares)) {
+      descriptor.value.middlewares.push(middle);
     } else {
-      target.middlewares = [middle];
+      descriptor.value.middlewares = [middle];
     }
   };
 }
@@ -103,7 +103,6 @@ export async function parseRoutes(app: Express) {
 
     // Controller 文件一旦引入，那么装饰器就开始工作，这时候已经拿到了所有的 method middleWare
     const controller = require(controllerPathName);
-
     // 解析通过装饰器拿到的数据
     while (parseLists.length) {
       const item = parseLists.pop();
