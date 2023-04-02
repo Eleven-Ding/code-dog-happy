@@ -13,11 +13,22 @@ export class PostsService {
     return result.toJSON();
   }
 
-
   async findAll(limit: number, offset: number) {
     return await PostModel.findAndCountAll({
       limit,
       offset,
+      attributes: {
+        exclude: ["post_content"],
+      },
+      order: [["post_id", "DESC"]],
+    });
+  }
+
+  async findOne(post_id: number) {
+    return await PostModel.findOne({
+      where: {
+        post_id,
+      },
     });
   }
 }
