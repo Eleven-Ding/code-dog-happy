@@ -2,14 +2,14 @@ import { Request } from "express";
 
 export type User = {
   username: string;
-  user_id: number;
+  user_id: string;
   avatar_url: string;
   hidden?: boolean;
 };
 
 export type GetGithubUserInfoResponse = {
   // Github 登录唯一 ID，每次登录 ID 不变动
-  id: number;
+  id: string;
   // Githu 头像
   avatar_url: string;
   // Github 昵称

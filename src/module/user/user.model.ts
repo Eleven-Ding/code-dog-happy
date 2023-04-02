@@ -1,12 +1,11 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../common/database";
-import { PostModel } from "../posts/posts.model";
 
 export const UserModel = sequelize.define(
   "User",
   {
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
       allowNull: false,
     },

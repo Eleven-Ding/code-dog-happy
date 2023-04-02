@@ -3,7 +3,7 @@ import { UserModel } from "./user.model";
 
 export class UserService {
   // 根据 UserId 查询用户信息
-  async findByUserId(id: number) {
+  async findByUserId(id: string) {
     const user = await UserModel.findOne({
       where: {
         user_id: id,

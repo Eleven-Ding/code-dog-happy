@@ -24,4 +24,11 @@ export default {
     dev: 3003,
     prod: 9004,
   },
+  qq: {
+    client_id: 101956106,
+    client_secret: "******",
+    get_access_token_url: "https://graph.qq.com/oauth2.0/token",
+    get_user_info_url: "https://graph.qq.com/user/get_user_info",
+    get_user_open_id_url: "https://graph.qq.com/oauth2.0/me",
+  },
 } as GlobalEnvConfig;
