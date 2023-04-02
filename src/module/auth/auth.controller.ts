@@ -8,26 +8,39 @@ import { generateToken } from "../../utils/jwt";
 import { createResponse } from "../../utils/createResponse";
 import { AuthType } from "./auth.model";
 
+export enum LoginType {
+  GitHub = "github",
+  QQ = "qq",
+}
+
 @Controller("/auth")
 class AuthContoller {
   @Get("/login")
   async Login(req: Request, res: Response) {
-    const { code } = url.parse(req.url, true).query;
+    const { code, type } = url.parse(req.url, true).query;
     if (!code) {
       return res.send(createResponse(null, "code is not exsit !", -1));
     }
+    let OAuthUserInfo = {} as User;
+
     try {
-      // 1. 通过 GitHub 登录获取 UserInfo
-      const githubUserInfo = await authService.loginWithGithub(code as string);
+      if (type === LoginType.GitHub) {
+        // 1. 通过 GitHub 登录获取 UserInfo
+        OAuthUserInfo = await authService.loginWithGithub(code as string);
+      } else if (type === LoginType.QQ) {
+        OAuthUserInfo = await authService.loginWithQQ(code as string);
+      } else {
+        return res.send(createResponse(null, "本站点暂未支持该种登录方式", -1));
+      }
 
       // 2. 通过 id 查找该用户是否登录
-      const { id, name, avatar_url } = githubUserInfo;
+      const { user_id, username, avatar_url } = OAuthUserInfo;
       const userInfo: User = {
-        user_id: id,
-        username: name,
+        user_id,
+        username,
         avatar_url,
       };
-      const user = await userService.findByUserId(id);
+      const user = await userService.findByUserId(user_id);
 
       // 3. 如果 user 不存在 则需要将 User 进行插入，插入应该不用阻塞 Token 的生成
       if (!user) {

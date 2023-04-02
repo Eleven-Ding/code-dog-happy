@@ -7,7 +7,7 @@ export type User = {
   hidden?: boolean;
 };
 
-export type GithubUserInfo = {
+export type GetGithubUserInfoResponse = {
   // Github 登录唯一 ID，每次登录 ID 不变动
   id: number;
   // Githu 头像
@@ -20,4 +20,16 @@ export type GithubUserInfo = {
   url: string;
 };
 
+// 获取 QQ 的用户信息
+export type GetUserInfoResponse = {
+  nickname: string;
+  figureurl_qq_1: string;
+};
+
+// 获取 QQ 的 open_id
+export type GetUnionidResponse = {
+  client_id: string;
+  openid: string;
+  unionid: string;
+};
 export type AuthRequest = Request & { user: User };
