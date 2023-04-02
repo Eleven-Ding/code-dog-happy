@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=development nodemon index.ts",
+    "dev": "NODE_ENV=development nodemon index.ts",
     "build": "tsc",
-    "compile:start": "NODE_ENV=production nodemon ./build/index.js",
+    "prod": "NODE_ENV=production nodemon ./build/index.js",
     "dev:compile": "webpack --config webpack.config.js --watch",
     "dev:start": "nodemon --watch build --exec node './build/bundle.js'"
   },

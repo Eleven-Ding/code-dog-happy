@@ -10,7 +10,7 @@ export default {
   },
   github: {
     client_id: "eb5bed26c16fde7dbbe3",
-    client_secret: '9f3c8099eb4d5fe9a4eb3019e7171afa0d1893e6',
+    client_secret: "******",
     get_access_tolen_url: "https://github.com/login/oauth/access_token",
     get_user_info_url: "https://api.github.com/user",
   },
@@ -20,4 +20,5 @@ export default {
     // token 过期时间
     expireTime: 60 * 60 * 24,
   },
+  port: 3003,
 } as GlobalEnvConfig;

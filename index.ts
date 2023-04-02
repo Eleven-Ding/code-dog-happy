@@ -1,21 +1,20 @@
 import express from "express";
 import { parseRoutes } from "./src/decorator/automatic-routing";
-import "./src/decorator/automatic-routing";
-import { PORT } from "./src/config/constants";
 import bodyParser from "body-parser";
 import "./src/common/database";
+import { initHttpServer } from "./src/common/adapter";
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get("/", (req, res, next) => {
-  res.send("Hello world111");
+  res.send("<h1>欢迎来到 Code Dog</h1>");
 });
 
 // 自动化路由
 parseRoutes(app);
 
-app.listen(PORT, () => {
-  console.log(`Express with Typescript! http://localhost:${PORT}`);
-});
+// 根据不同的环境启动 http 或者 https
+initHttpServer(app);
