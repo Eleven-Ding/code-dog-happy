@@ -20,5 +20,8 @@ export default {
     // token 过期时间
     expireTime: 60 * 60 * 24,
   },
-  port: 3003,
+  port: {
+    dev: 3003,
+    prod: 9004,
+  },
 } as GlobalEnvConfig;

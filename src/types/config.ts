@@ -25,5 +25,8 @@ export type GlobalEnvConfig = {
     tokenSecret: string;
     expireTime: number;
   };
-  port: number;
+  port: {
+    dev: number;
+    prod: number;
+  };
 };
