@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { UserEntity } from "../user/user.model";
 
 @Entity("post")
@@ -18,7 +25,7 @@ export class PostEntity {
   @Column({ default: 0 })
   view_count: number;
 
-  @Column({ default: "" })
+  @Column({ type: "mediumtext" })
   post_content: string;
 
   @Column({ default: 0 })
@@ -29,7 +36,7 @@ export class PostEntity {
 
   @UpdateDateColumn()
   updatedAt: string;
-  
+
   @ManyToOne(() => UserEntity, (user) => user.posts)
   user: UserEntity;
 }
