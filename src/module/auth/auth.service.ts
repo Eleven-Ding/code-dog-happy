@@ -2,8 +2,10 @@ import globalEnvConfig from "../../config";
 import axios from "axios";
 import url from "url";
 import { GetUserInfoResponse, User } from "../../types/model";
-import { AuthModel, AuthType } from "./auth.model";
+import { RolesEntity, RolesType } from "./auth.model";
 import { GetGithubUserInfoResponse } from "../../types/model";
+import { AppDataSource } from "../../common/typeorm";
+import { Repository } from "typeorm";
 
 const { github, qq } = globalEnvConfig;
 const { client_id, client_secret, get_access_tolen_url, get_user_info_url } =
@@ -18,6 +20,10 @@ const {
 } = qq;
 
 class AuthService {
+  rolesRepostory: Repository<RolesEntity>;
+  constructor() {
+    this.rolesRepostory = AppDataSource.getRepository(RolesEntity);
+  }
   // Github 登录
   async loginWithGithub(code: string): Promise<User> {
     try {
@@ -90,12 +96,22 @@ class AuthService {
   }
 
   // 绑定用户权限
-  async bindUserRole(user_id: string, role: AuthType) {
+  async bindUserRole(user_id: string, role: RolesType) {
     // 先查找是否已经存在
-    return await AuthModel.create({
+    return await this.rolesRepostory.save({
       user_id,
-      auth_type: role,
+      role,
     });
+  }
+
+  // 获取用户权限
+  async getUserRole(user_id: string): Promise<RolesEntity | null> {
+    const result = await this.rolesRepostory.findOne({
+      where: {
+        user_id,
+      },
+    });
+    return result;
   }
 }
 

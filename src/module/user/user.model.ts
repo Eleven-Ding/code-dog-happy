@@ -1,38 +1,33 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../common/database";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { PostEntity } from "../posts/posts.model";
 
-export const UserModel = sequelize.define(
-  "User",
-  {
-    user_id: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-      allowNull: false,
-    },
-    avatar_url: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    hidden: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-  },
-  {
-    tableName:"user",
-    indexes: [
-      {
-        name: "username_index",
-        using: "BTREE",
-        fields: ["username"],
-      },
-    ],
-  }
-);
+@Entity("user")
+export class UserEntity {
+  @PrimaryGeneratedColumn()
+  user_id: string;
 
+  @Column()
+  avatar_url: string;
 
-UserModel.sync();
+  @Column()
+  username: string;
+
+  @Column({ default: 0, select: false })
+  hidden?: number;
+
+  @OneToMany(() => PostEntity, (post) => post.user)
+  posts: PostEntity[];
+
+  @CreateDateColumn({ select: false })
+  createdAt: string;
+
+  @UpdateDateColumn({ select: false })
+  updatedAt: string;
+}

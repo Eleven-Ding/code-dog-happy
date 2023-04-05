@@ -1,22 +1,31 @@
 import { User } from "../../types/model";
-import { UserModel } from "./user.model";
+import { AppDataSource } from "../../common/typeorm";
+import { Repository } from "typeorm";
+import { UserEntity } from "./user.model";
 
 export class UserService {
+  userModel: Repository<UserEntity>;
+  constructor() {
+    this.userModel = AppDataSource.getRepository(UserEntity);
+  }
   // 根据 UserId 查询用户信息
   async findByUserId(id: string) {
-    const user = await UserModel.findOne({
+    const user = await this.userModel.findOne({
       where: {
         user_id: id,
       },
-      // 这里尝试只取一个
-      attributes: ["username"],
+      select: ["username"],
     });
-    return user?.toJSON();
+
+    return user;
   }
 
   async createUser(userInfo: User) {
-    const user = await UserModel.create({
-      ...userInfo,
+    const { user_id, username, avatar_url } = userInfo;
+    const user = await this.userModel.save({
+      user_id,
+      username,
+      avatar_url,
     });
     return user;
   }

@@ -6,7 +6,8 @@ import { userService } from "../user/user.service";
 import { User } from "../../types/model";
 import { generateToken } from "../../utils/jwt";
 import { createResponse } from "../../utils/createResponse";
-import { AuthType } from "./auth.model";
+import { RolesType } from "./auth.model";
+import { UserEntity } from "../user/user.model";
 
 export enum LoginType {
   GitHub = "github",
@@ -46,7 +47,7 @@ class AuthContoller {
       if (!user) {
         await userService.createUser(userInfo);
         // 4. 绑定权限
-        await authService.bindUserRole(userInfo.user_id, AuthType.User); // 默认是绑定 User
+        await authService.bindUserRole(userInfo.user_id, RolesType.User); // 默认是绑定 User
       }
 
       // 5. 生成 Token

@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 import { User } from "../types/model";
 import globalEnvConfig from "../config";
+import { UserEntity } from "../module/user/user.model";
 const {
   jwt: { tokenSecret, expireTime },
 } = globalEnvConfig;

@@ -1,32 +1,37 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../common/database";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 // 用户类型
-export enum AuthType {
+export enum RolesType {
   User = 0,
   Admin = 1,
 }
 
-export const AuthModel = sequelize.define(
-  "Auth",
-  {
-    auth_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    auth_type: {
-      type: DataTypes.INTEGER,
-      defaultValue: AuthType.User,
-    },
-  },
-  {
-    tableName: "auth",
-  }
-);
+export type AuthParams = {
+  auth_id: number;
+  user_id: number;
+  auth_type: RolesType;
+};
 
-AuthModel.sync();
+@Entity("role")
+export class RolesEntity {
+  @PrimaryGeneratedColumn()
+  auth_id: number;
+
+  @Column()
+  user_id: string;
+
+  @Column()
+  role: RolesType;
+
+  @CreateDateColumn({ select: false })
+  createdAt: string;
+
+  @UpdateDateColumn({ select: false })
+  updatedAt: string;
+}

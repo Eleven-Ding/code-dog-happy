@@ -1,9 +1,9 @@
 import express from "express";
+import "reflect-metadata";
+import './src/common/typeorm'
 import { parseRoutes } from "./src/decorator/automatic-routing";
 import bodyParser from "body-parser";
-import "./src/common/database";
 import { initHttpServer } from "./src/common/adapter";
-import url from "url";
 
 const app = express();
 

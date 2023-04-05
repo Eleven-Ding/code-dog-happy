@@ -5,6 +5,7 @@ export type User = {
   user_id: string;
   avatar_url: string;
   hidden?: boolean;
+  role?: number;
 };
 
 export type GetGithubUserInfoResponse = {

@@ -1,12 +1,14 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "target": "es6",
-      "rootDir": "./",
-      "outDir": "./build",
-      "strict": true,
-      "experimentalDecorators": true,
-      "moduleResolution": "node"
-    }
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "rootDir": "./",
+    "outDir": "./build",
+    "strict": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false
   }
+}
