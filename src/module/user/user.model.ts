@@ -1,16 +1,16 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  PrimaryColumn,
 } from "typeorm";
 import { PostEntity } from "../posts/posts.model";
 
 @Entity("user")
 export class UserEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   user_id: string;
 
   @Column()
