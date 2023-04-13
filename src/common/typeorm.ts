@@ -1,3 +1,4 @@
+import { CommentEntity } from './../module/comment/comment.model';
 import { DataSource } from "typeorm";
 import { UserEntity } from "../module/user/user.model";
 import globalEnvConfig from "../config";
@@ -17,7 +18,7 @@ export const AppDataSource = new DataSource({
   username: user,
   password: password,
   database: base,
-  entities: [UserEntity, RolesEntity, PostEntity],
+  entities: [UserEntity, RolesEntity, PostEntity, CommentEntity],
   synchronize: true,
 });
 

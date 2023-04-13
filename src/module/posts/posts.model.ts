@@ -5,8 +5,10 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { UserEntity } from "../user/user.model";
+import { CommentEntity } from "../comment/comment.model";
 
 @Entity("post")
 export class PostEntity {
@@ -39,6 +41,9 @@ export class PostEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.posts)
   user: UserEntity;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.post)
+  comments: CommentEntity[];
 }
 
 export enum Post_state {

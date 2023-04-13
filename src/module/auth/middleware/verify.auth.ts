@@ -21,3 +21,5 @@ export async function verifyAuthiddleware(
     res.send(createResponse(null, (error as Error).message, -1));
   }
 }
+
+// TODO: 校验用户状态是否能够完成当前操作

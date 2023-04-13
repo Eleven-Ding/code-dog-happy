@@ -7,6 +7,7 @@ import {
   PrimaryColumn,
 } from "typeorm";
 import { PostEntity } from "../posts/posts.model";
+import { CommentEntity } from "../comment/comment.model";
 
 @Entity("user")
 export class UserEntity {
@@ -25,6 +26,9 @@ export class UserEntity {
   @OneToMany(() => PostEntity, (post) => post.user)
   posts: PostEntity[];
 
+  @OneToMany(() => CommentEntity, (comment) => comment.user)
+  comments: CommentEntity[];
+  
   @CreateDateColumn({ select: false })
   createdAt: string;
 
