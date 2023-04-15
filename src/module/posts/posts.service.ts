@@ -13,9 +13,7 @@ export class PostsService {
     const { user_id } = user;
     const result = await this.postRepository.save({
       ...body,
-      user: {
-        user_id,
-      },
+      user_id,
     });
     return result;
   }
@@ -33,11 +31,11 @@ export class PostsService {
         "view_count",
         "createdAt",
         "updatedAt",
+        "user_id",
       ],
       order: {
         post_id: "desc",
       },
-      relations:['user'],
     });
   }
 

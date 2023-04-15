@@ -2,6 +2,7 @@ import { User } from "../../types/model";
 import { AppDataSource } from "../../common/typeorm";
 import { Repository } from "typeorm";
 import { UserEntity } from "./user.model";
+import { In } from "typeorm";
 
 export class UserService {
   userModel: Repository<UserEntity>;
@@ -28,6 +29,16 @@ export class UserService {
       avatar_url,
     });
     return user;
+  }
+
+  // 根据 ids 找到所有匹配的用户
+  async findAllByIds(userIds: string[]) {
+    const users = await this.userModel.find({
+      where: {
+        user_id: In(userIds),
+      },
+    });
+    return users;
   }
 }
 

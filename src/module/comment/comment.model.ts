@@ -36,18 +36,17 @@ export class CommentEntity {
   @Column({ default: CommentStatus.normal })
   status: number; // 当前评论的状态
 
-  @Column()
+  @Column({ default: "" })
   position: string; // 评论的地点，类似于显示 ip 了
 
-  @Column({default: 0})
-  likesCount: number; // 点赞数量 
+  @Column({ default: 0 })
+  likesCount: number; // 点赞数量
 
-  @ManyToOne(() => UserEntity, (user) => user.comments) 
-  user: UserEntity; // 关联表 User 表
+  @Column()
+  user_id: string; // 评论属于谁
 
-  @Index() // 创建索引，查询更快
-  @ManyToOne(() => PostEntity, (post) => post.comments)
-  post: PostEntity; // 关联 Post 表
+  @Column() 
+  post_id: number; // 哪篇文章
 
   @CreateDateColumn()
   createdAt: string; // 评论更新时间

@@ -2,10 +2,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from "typeorm";
 import { UserEntity } from "../user/user.model";
 import { CommentEntity } from "../comment/comment.model";
@@ -39,11 +37,8 @@ export class PostEntity {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.posts)
-  user: UserEntity;
-
-  @OneToMany(() => CommentEntity, (comment) => comment.post)
-  comments: CommentEntity[];
+  @Column()
+  user_id: string; 
 }
 
 export enum Post_state {

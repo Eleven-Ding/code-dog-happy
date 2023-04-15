@@ -11,6 +11,9 @@ import { checkGetAllPostPrams } from "./middleware/check-get-all-post";
 import { GetAllPageParams } from "./middleware/check-get-all-post";
 import { verifyIsSelfPost } from "./middleware/verify-self-post";
 import { verifyAuthiddleware } from "../auth/middleware/verify.auth";
+import { userService } from "../user/user.service";
+import { enhancePostInfo } from "../../utils/enhancePostInfo";
+import { commentService } from "../comment/comment.service";
 
 @Controller("/post")
 export class PostsController {
@@ -33,9 +36,24 @@ export class PostsController {
   async findAll(req: AuthRequest & { query: GetAllPageParams }, res: Response) {
     const { offset, limit } = req.query;
     try {
-      const result = await postsService.findAll(limit, offset);
+      // 1. 查询所有文章
+      const [posts, count] = await postsService.findAll(limit, offset);
 
-      res.send(createResponse(result, "查询成功"));
+      // 2. 根据文章查询所有的用户信息
+      const userIds = posts.map((post) => post.user_id);
+      const postIds = posts.map((post) => post.post_id);
+      const users = await userService.findAllByIds(userIds);
+
+      // 4. 获取每个文章的评论数量
+      const comments = await commentService.getCommentsCountByPostId(postIds);
+
+      // 3. 把 user, comment 信息增强到 posts 上
+      const enhancePosts = enhancePostInfo(posts, {
+        users,
+        comments,
+      });
+
+      res.send(createResponse([enhancePosts, count], "查询成功"));
     } catch (error) {
       res.send({ data: (error as Error).message });
     }
@@ -65,7 +83,7 @@ export class PostsController {
   @Middleware(verifyAuthiddleware)
   @Middleware(verifyLoginMiddleware) // 1. 校验是否登录
   async updatePost(req: AuthRequest, res: Response) {
-    res.send("111")
+    res.send("111");
   }
 }
 const postsController = new PostsController();
