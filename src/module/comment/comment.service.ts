@@ -44,12 +44,21 @@ class CommentService {
   }
 
   // 根据 文章 id 获取评论的数量
-  async getCommentsCountByPostId(postId: number[]) {
+  async getCommentsByPostId(postId: number[]) {
     const comments = await this.commentRepository.find({
       where: { post_id: In(postId) },
       select: ["post_id"],
     });
     return comments;
+  }
+
+  async getCommentsCountByPostId(post_id: number) {
+    const count = await this.commentRepository.count({
+      where: {
+        post_id,
+      },
+    });
+    return count
   }
 
   // 根据文章 id 分页获取评论

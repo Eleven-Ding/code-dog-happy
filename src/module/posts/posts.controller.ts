@@ -45,7 +45,7 @@ export class PostsController {
       const users = await userService.findAllByIds(userIds);
 
       // 4. 获取每个文章的评论数量
-      const comments = await commentService.getCommentsCountByPostId(postIds);
+      const comments = await commentService.getCommentsByPostId(postIds);
 
       // 3. 把 user, comment 信息增强到 posts 上
       const enhancePosts = enhancePostInfo(posts, {
@@ -69,12 +69,24 @@ export class PostsController {
     if (!post_id && post_id !== 0) {
       return res.send(createResponse(null, "post_id is require", -1));
     }
-    try {
-      const result = await postsService.findOne(post_id);
-      res.send(createResponse(result, "查询成功"));
-    } catch (error) {
-      res.send(createResponse(null, `查询失败${(error as Error).message}`));
-    }
+    Promise.all([
+      postsService.findOne(post_id),
+      commentService.getCommentsCountByPostId(post_id),
+    ])
+      .then(([result, comment_count]) => {
+        res.send(
+          createResponse(
+            {
+              ...result,
+              comment_count,
+            },
+            "查询成功"
+          )
+        );
+      })
+      .catch((error) => {
+        res.send(createResponse(null, `查询失败${(error as Error).message}`));
+      });
   }
 
   // 更新文章信息
