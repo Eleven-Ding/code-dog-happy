@@ -23,7 +23,7 @@ export function verifyLoginMiddleware(
     // 抛出错误
     res.status(403);
     return res.send(
-      createResponse(null, "invalid token ，" + (error as Error).message, -1)
+      createResponse(null, "身份校验失败" + (error as Error).message, -1)
     );
   }
 }

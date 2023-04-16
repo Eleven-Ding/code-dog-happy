@@ -15,7 +15,12 @@ class CommentService {
 
   // 创建评论
   async createComment(
-    { postId, content, parentId }: Partial<CommentEntity> & { postId: number },
+    {
+      postId,
+      content,
+      parentId,
+      comment_on_user_id,
+    }: Partial<CommentEntity> & { postId: number },
     { user_id }: User,
     ip?: string
   ) {
@@ -41,6 +46,7 @@ class CommentService {
       position,
       user_id,
       post_id,
+      comment_on_user_id,
     });
     return comment;
   }
