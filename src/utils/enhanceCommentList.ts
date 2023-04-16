@@ -1,15 +1,25 @@
-import { CommentEntity } from "../module/comment/comment.model";
 import { UserEntity } from "../module/user/user.model";
+import { EnhanceCommentItem } from "./getUserIdListFromComments";
 export type EnhanceParams = {
   users: UserEntity[];
 };
 export function enhanceCommentList(
-  commentList: CommentEntity[],
+  commentList: EnhanceCommentItem[],
   { users }: EnhanceParams
 ) {
   return commentList.map((comment) => {
+    const children = comment.children.map((child) => {
+      return {
+        ...child,
+        user: users.find((user) => user.user_id === child.user_id),
+        comment_on_user: users.find(
+          (user) => user.user_id === child.comment_on_user_id
+        ),
+      };
+    });
     return {
       ...comment,
+      children,
       user: users.find((user) => user.user_id === comment.user_id),
     };
   });

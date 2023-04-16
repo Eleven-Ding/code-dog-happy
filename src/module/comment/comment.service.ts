@@ -85,6 +85,17 @@ class CommentService {
     });
     return comments;
   }
+  // 根据 commentId 查找子评论
+  async getCommentsByParentId(commentId: number, take = 30, skip = 0) {
+    const commentListCount = await this.commentRepository.findAndCount({
+      where: {
+        parentId: commentId,
+      },
+      take,
+      skip,
+    });
+    return commentListCount;
+  }
 }
 
 export const commentService = new CommentService();
