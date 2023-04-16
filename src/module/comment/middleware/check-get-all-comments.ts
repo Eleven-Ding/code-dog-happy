@@ -5,6 +5,7 @@ import { createResponse } from "../../../utils/createResponse";
 export type GetAllCommentsParams = {
   offset: number;
   limit: number;
+  postId: number;
 };
 
 export function checkGetAllCommentsPrams(
@@ -12,9 +13,9 @@ export function checkGetAllCommentsPrams(
   res: Response,
   next: NextFunction
 ) {
-  const { offset, limit } = req.query;
+  const { offset, limit, postId } = req.query;
   // 1. 检查参数是否存在
-  if (!offset || !limit) {
+  if (!offset || !limit || !postId) {
     res.status(400);
     return res.send(
       createResponse(
@@ -24,7 +25,11 @@ export function checkGetAllCommentsPrams(
     );
   }
   // 2. 检查参数类型
-  if (typeof Number(offset) !== "number" || typeof Number(limit) !== "number") {
+  if (
+    typeof Number(offset) !== "number" ||
+    typeof Number(limit) !== "number" ||
+    typeof Number(postId) !== "number"
+  ) {
     res.status(400);
     return res.send(
       createResponse(

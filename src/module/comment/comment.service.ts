@@ -4,6 +4,7 @@ import { AppDataSource } from "../../common/typeorm";
 import { postsService } from "../posts/posts.service";
 import { User } from "../../types/model";
 import { GetAllCommentsParams } from "./middleware/check-get-all-comments";
+import { userService } from "../user/user.service";
 
 class CommentService {
   commentRepository: Repository<CommentEntity>;
@@ -14,33 +15,34 @@ class CommentService {
 
   // 创建评论
   async createComment(
-    body: Partial<CommentEntity> & { postId: number },
-    { user_id }: User
+    { postId, content, parentId }: Partial<CommentEntity> & { postId: number },
+    { user_id }: User,
+    ip?: string
   ) {
-    const { postId } = body;
+    let position = "地球";
     // 1. 查看该 Post 是否存在
     const post = await postsService.findOne(postId);
     if (!post) {
       throw new Error("Post not found where postId = " + postId);
     }
+    // 2. 根据 ip 获取地址
+    if (ip && ip.length > 4 && ip !== "127.0.0.1") {
+      const { province, city } = await userService.getAddressByIp(ip);
+      if (province && city) {
+        position = `${province} - ${city}`;
+      }
+    }
+
     const { post_id } = post;
-    // 2. 插入评论，关联 Post 和 User
+    // 3. 插入评论，关联 Post 和 User
     const comment = await this.commentRepository.save({
-      content: body.content,
-      parentId: body.parentId,
+      content,
+      parentId,
+      position,
       user_id,
       post_id,
     });
     return comment;
-  }
-
-  // 分页查询评论
-  async getAllComments({ limit, offset }: GetAllCommentsParams) {
-    const comments = await this.commentRepository.findAndCount({
-      take: limit,
-      skip: offset,
-    });
-    return comments;
   }
 
   // 根据 文章 id 获取评论的数量
@@ -58,16 +60,24 @@ class CommentService {
         post_id,
       },
     });
-    return count
+    return count;
   }
 
-  // 根据文章 id 分页获取评论
-  async getCommentsByPostIds(postId: number) {
-    const comments = await this.commentRepository.findAndCount({
-      // take: limit,
-      // skip: offset,
-      where: { post_id: postId },
+  // 根据文章 id 分页获取第一级评论
+  async getCommentListByPostId({
+    postId,
+    limit,
+    offset,
+  }: GetAllCommentsParams) {
+    const comments = await this.commentRepository.find({
+      where: { post_id: postId, parentId: -1 },
+      take: limit,
+      skip: offset,
+      order: {
+        createdAt: "DESC",
+      },
     });
+    return comments;
   }
 }
 

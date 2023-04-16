@@ -1,6 +1,6 @@
 import express from "express";
 import "reflect-metadata";
-import './src/common/typeorm'
+import "./src/common/typeorm";
 import { parseRoutes } from "./src/decorator/automatic-routing";
 import bodyParser from "body-parser";
 import { initHttpServer } from "./src/common/adapter";

@@ -3,6 +3,20 @@ import { AppDataSource } from "../../common/typeorm";
 import { Repository } from "typeorm";
 import { UserEntity } from "./user.model";
 import { In } from "typeorm";
+import globalEnvConfig from "../../config";
+import axios from "axios";
+
+const {
+  amap: {
+    ip: { url, key },
+  },
+} = globalEnvConfig;
+
+export type UserLocationInfo = {
+  status: string;
+  province?: string;
+  city: string;
+};
 
 export class UserService {
   userModel: Repository<UserEntity>;
@@ -21,6 +35,7 @@ export class UserService {
     return user;
   }
 
+  // 创建用户
   async createUser(userInfo: User) {
     const { user_id, username, avatar_url } = userInfo;
     const user = await this.userModel.save({
@@ -39,6 +54,17 @@ export class UserService {
       },
     });
     return users;
+  }
+
+  // 根据 ip 获取用户地址
+  async getAddressByIp(ip: string): Promise<UserLocationInfo> {
+    const result = await axios.get(url, {
+      params: {
+        key,
+        ip,
+      },
+    });
+    return result.data;
   }
 }
 

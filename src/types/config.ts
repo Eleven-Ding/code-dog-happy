@@ -38,4 +38,10 @@ export type GlobalEnvConfig = {
     dev: number;
     prod: number;
   };
+  amap:{
+    ip:{
+      url: string;
+      key: string;
+    }
+  }
 };
