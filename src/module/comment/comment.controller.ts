@@ -70,7 +70,7 @@ class CommentController {
       const userIdList = getUserIdListFromComments(commentList);
       const users = await userService.findAllByIds(userIdList);
 
-      // 4. 将 user 信息聚合到 commentList 上 
+      // // 4. 将 user 信息聚合到 commentList 上 
       // TODO: 如果点赞也做到单独的一张表，那么后续也可以将点赞信息聚合到 commentList 上
       const enhanceComments = enhanceCommentList(commentList, {
         users,

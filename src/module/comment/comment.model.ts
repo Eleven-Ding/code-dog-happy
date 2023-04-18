@@ -46,7 +46,7 @@ export class CommentEntity {
   user_id: string; // 评论属于谁
 
   @Column({ default: "-1" })
-  comment_on_user_id: string; // 评论的目标是谁，如果是回复别人的评论，那么该字段就是目标的  user_id
+  comment_on_id: number; // 回复的是哪个评论
 
   @Column()
   post_id: number; // 哪篇文章

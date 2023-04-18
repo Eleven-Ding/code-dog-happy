@@ -12,9 +12,6 @@ export function enhanceCommentList(
       return {
         ...child,
         user: users.find((user) => user.user_id === child.user_id),
-        comment_on_user: users.find(
-          (user) => user.user_id === child.comment_on_user_id
-        ),
       };
     });
     return {

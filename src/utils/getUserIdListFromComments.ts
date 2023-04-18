@@ -16,9 +16,6 @@ export function getUserIdListFromComments(commentList: EnhanceCommentItem[]) {
     const children = comment.children;
     for (const child of children) {
       userIds.add(child.user_id);
-      if (child.comment_on_user_id) {
-        userIds.add(child.comment_on_user_id);
-      }
     }
   }
   return [...userIds];
