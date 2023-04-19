@@ -19,7 +19,7 @@ class CommentService {
       postId,
       content,
       parentId,
-      comment_on_id
+      comment_on_id,
     }: Partial<CommentEntity> & { postId: number },
     { user_id }: User,
     ip?: string
@@ -86,13 +86,17 @@ class CommentService {
     return comments;
   }
   // 根据 commentId 查找子评论
-  async getCommentsByParentId(commentId: number, take = 3, skip = 0) {
+  async getCommentsByParentId(
+    commentId: number,
+    selectAll = false,
+    options = { take: 3, skip: 0 }
+  ) {
+    let finalOptions = selectAll ? {} : options;
     const commentListCount = await this.commentRepository.findAndCount({
       where: {
         parentId: commentId,
       },
-      take,
-      skip,
+      ...finalOptions,
     });
     return commentListCount;
   }

@@ -9,7 +9,9 @@ export type EnhanceCommentItem = CommentEntity & {
   children: EnhanceCommetEntity[];
   childrenCommentCount: number;
 };
-export function getUserIdListFromComments(commentList: EnhanceCommentItem[]) {
+export function getUserIdListFromCommentsPro(
+  commentList: EnhanceCommentItem[]
+) {
   const userIds = new Set<string>();
   for (const comment of commentList) {
     userIds.add(comment.user_id);
@@ -17,6 +19,14 @@ export function getUserIdListFromComments(commentList: EnhanceCommentItem[]) {
     for (const child of children) {
       userIds.add(child.user_id);
     }
+  }
+  return [...userIds];
+}
+
+export function getUserIdListFromCommentsCommon(commentList: CommentEntity[]) {
+  const userIds = new Set<string>();
+  for (const comment of commentList) {
+    userIds.add(comment.user_id);
   }
   return [...userIds];
 }
