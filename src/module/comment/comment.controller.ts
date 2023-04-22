@@ -46,8 +46,8 @@ class CommentController {
   async createComment(req: AuthRequest, res: Response) {
     try {
       const ip = getIp(req);
-      await commentService.createComment(req.body, req.user, ip);
-      return res.send(createResponse(null, "评论成功"));
+      const result = await commentService.createComment(req.body, req.user, ip);
+      return res.send(createResponse(result, "评论成功"));
     } catch (error) {
       res.status(500);
       return res.send(createResponse(null, (error as Error).message, -1));
