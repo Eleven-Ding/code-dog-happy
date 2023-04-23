@@ -46,6 +46,11 @@ export class PostsService {
       },
     });
   }
+
+  // 更新文章信息，权限在 controller 层进行判断
+  async update(post: Partial<PostEntity>) {
+    return await this.postRepository.save(post);
+  }
 }
 
 export const postsService = new PostsService();

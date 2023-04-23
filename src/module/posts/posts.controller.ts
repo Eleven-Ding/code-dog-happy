@@ -8,12 +8,14 @@ import { CreatePostParams } from "./middleware/check-create-post";
 import { postsService } from "./posts.service";
 import { createResponse } from "../../utils/createResponse";
 import { checkGetAllPostPrams } from "./middleware/check-get-all-post";
+import { checkUpdateViewarams } from "./middleware/check-update-view";
 import { GetAllPageParams } from "./middleware/check-get-all-post";
 import { verifyIsSelfPost } from "./middleware/verify-self-post";
 import { verifyAuthiddleware } from "../auth/middleware/verify.auth";
 import { userService } from "../user/user.service";
 import { enhancePostInfo } from "../../utils/enhancePostInfo";
 import { commentService } from "../comment/comment.service";
+import { PostEntity } from "./posts.model";
 
 @Controller("/post")
 export class PostsController {
@@ -92,10 +94,30 @@ export class PostsController {
   // 更新文章信息
   @Post("/update")
   @Middleware(verifyIsSelfPost) // 2. 检测更新的文章是否是自己的文章
-  @Middleware(verifyAuthiddleware)
+  @Middleware(verifyAuthiddleware) //
   @Middleware(verifyLoginMiddleware) // 1. 校验是否登录
   async updatePost(req: AuthRequest, res: Response) {
     res.send("111");
+  }
+
+  // 更新文章浏览量，因为更新文章的接口需要检查用户权限和身份
+  @Post("/updateView")
+  @Middleware(checkUpdateViewarams) // 检查
+  async updatePostView(req: AuthRequest, res: Response) {
+    const { post_id } = req.body as Partial<PostEntity>;
+    try {
+      // 找到原来的 view_count;
+      const post = await postsService.findOne(post_id!);
+      if (!post) {
+        throw new Error("Post not found");
+      }
+      // +1
+      await postsService.update({ post_id, view_count: post.view_count + 1 });
+      res.send(createResponse(null, `viewCount+1`));
+    } catch (error) {
+      res.send(createResponse(null, `更新失败${(error as Error).message}`));
+    }
+    // 调用 update
   }
 }
 const postsController = new PostsController();
