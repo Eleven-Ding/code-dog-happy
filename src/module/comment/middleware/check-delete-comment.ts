@@ -24,7 +24,7 @@ export async function checkDeleteCommentParamsAndAuth(
     res.status(400);
     return res.send(createResponse(null, "comment is not found", -1));
   }
-  if (comment.user_id !== user.user_id) {
+  if (String(comment.user_id) !== String(user.user_id)) {
     res.status(403);
     return res.send(createResponse(null, "comment is not yours", -1));
   }
