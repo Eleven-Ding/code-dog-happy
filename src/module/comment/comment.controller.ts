@@ -5,7 +5,7 @@ import {
   Middleware,
 } from "../../decorator/automatic-routing";
 import { Repository } from "typeorm";
-import { CommentEntity } from "./comment.model";
+import { CommentEntity, CommentStatus } from "./comment.model";
 import { AppDataSource } from "../../common/typeorm";
 import { verifyLoginMiddleware } from "../auth/middleware/verify.login";
 import { AuthRequest } from "../../types/model";
@@ -34,6 +34,9 @@ import {
   GetChildrenCommentsParams,
 } from "./middleware/check-get-children-comment";
 
+import { checkDeleteCommentParamsAndAuth } from "./middleware/check-delete-comment";
+import { verifyAuthiddleware } from "../auth/middleware/verify.auth";
+
 @Controller("/comment")
 class CommentController {
   commentModel: Repository<CommentEntity>;
@@ -54,6 +57,7 @@ class CommentController {
     }
   }
 
+  // 获取评论列表
   @Get("/list")
   @Middleware(checkGetAllCommentsPrams)
   async getAllComments(
@@ -89,6 +93,7 @@ class CommentController {
       return res.send(createResponse(null, (error as Error).message, -1));
     }
   }
+  // 获取子评论列表
   @Get("/children_list")
   @Middleware(checkGetChildrenCommentsPrams)
   async getChildrenCommentList(
@@ -115,6 +120,30 @@ class CommentController {
       return res.send(createResponse(enhanceComments, "获取子评论成功"));
     } catch (error) {
       return res.send(createResponse(null, (error as Error).message, -1));
+    }
+  }
+  // 删除评论
+  @Post("/delete")
+  @Middleware(checkDeleteCommentParamsAndAuth) // 检查参数和文章
+  @Middleware(verifyLoginMiddleware)
+  async deleteComment(req: Request, res: Response) {
+    try {
+      const { comment_id } = req.body;
+      // 查找该评论是否存在
+      const comment = await commentService.findOne(comment_id as number);
+      if (!comment) {
+        throw new Error("comment not found");
+      }
+      // 更新
+      comment.status = CommentStatus.delete;
+      await commentService.update(comment);
+      // 删除子评论，不阻塞
+      commentService.deleteChildrenCommentByCommentId(comment.commentId);
+      return res.send(createResponse(null, "删除评论成功"));
+    } catch (error) {
+      res.send(
+        createResponse(null, `删除评论失败 ${(error as Error).message}`, -1)
+      );
     }
   }
 }

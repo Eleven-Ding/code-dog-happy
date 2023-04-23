@@ -1,5 +1,5 @@
-import { In, Repository } from "typeorm";
-import { CommentEntity } from "./comment.model";
+import { In, Repository, Not } from "typeorm";
+import { CommentEntity, CommentStatus } from "./comment.model";
 import { AppDataSource } from "../../common/typeorm";
 import { postsService } from "../posts/posts.service";
 import { User } from "../../types/model";
@@ -54,16 +54,18 @@ class CommentService {
   // 根据 文章 id 获取评论的数量
   async getCommentsByPostId(postId: number[]) {
     const comments = await this.commentRepository.find({
-      where: { post_id: In(postId) },
+      where: { post_id: In(postId), status: Not(CommentStatus.delete) },
       select: ["post_id"],
     });
     return comments;
   }
 
+  // 根据 commentId 获取子评论的数量
   async getCommentsCountByPostId(post_id: number) {
     const count = await this.commentRepository.count({
       where: {
         post_id,
+        status: Not(CommentStatus.delete),
       },
     });
     return count;
@@ -76,7 +78,11 @@ class CommentService {
     offset,
   }: GetAllCommentsParams) {
     const comments = await this.commentRepository.find({
-      where: { post_id: postId, parentId: -1 },
+      where: {
+        post_id: postId,
+        parentId: -1,
+        status: Not(CommentStatus.delete),
+      },
       take: limit,
       skip: offset,
       order: {
@@ -85,6 +91,7 @@ class CommentService {
     });
     return comments;
   }
+
   // 根据 commentId 查找子评论
   async getCommentsByParentId(
     commentId: number,
@@ -95,10 +102,38 @@ class CommentService {
     const commentListCount = await this.commentRepository.findAndCount({
       where: {
         parentId: commentId,
+        status: Not(CommentStatus.delete),
       },
       ...finalOptions,
     });
     return commentListCount;
+  }
+
+  // 根据 commentId 查找comment
+  async findOne(commentId: number) {
+    return await this.commentRepository.findOne({
+      where: {
+        commentId,
+      },
+    });
+  }
+
+  // 更新评论数据
+  async update(comment: Partial<CommentEntity>) {
+    return await this.commentRepository.save(comment);
+  }
+
+  // 删除parentId 为 commentId
+  async deleteChildrenCommentByCommentId(commentId: number) {
+    return await AppDataSource.createQueryBuilder()
+      .update(CommentEntity)
+      .set({
+        status: CommentStatus.delete,
+      })
+      .where({
+        parentId: commentId,
+      })
+      .execute();
   }
 }
 
